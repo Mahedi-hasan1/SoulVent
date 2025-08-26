@@ -2,38 +2,20 @@ package main
 
 import (
 	"log"
-	"net/http"
-	"os"
-	"soulvent/internal/model"
+	"soulvent/internal/db"
+	"soulvent/internal/handler"
 
-	"gorm.io/driver/postgres"
-	"gorm.io/gorm"
+	"github.com/gin-gonic/gin"
 )
 
+func init() {
+	db.ConnectPostgresDB()
+	//db.AutoMigrateModels()
+}
+
 func main() {
-	// Use DATABASE_URL from .env
-	dsn := os.Getenv("DATABASE_URL")
-	if dsn == "" {
-		log.Fatal("DATABASE_URL not set in environment")
-	}
-
-	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
-	if err != nil {
-		log.Fatal("failed to connect database: ", err)
-	}
-
-	// Auto-migrate User model
-	err = db.AutoMigrate(&model.User{})
-
-	if err != nil {
-		log.Fatal("failed to auto-migrate: ", err)
-	} else {
-		log.Println("Database connected and migrated successfully")
-	}
-	// Set up repository for handler
-
-	//http.HandleFunc("/users", handler.CreateUser)
-
+	r := gin.Default()
+	r.POST("/users", handler.CreateUser)
 	log.Println("SoulVent main service running on :8080")
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	r.Run(":8080")
 }

@@ -1,28 +1,26 @@
 package handler
 
-// import (
-// 	"SoulVent/internal/model"
-// 	"SoulVent/internal/repository/user"
-// 	"encoding/json"
-// 	"net/http"
-// )
+import (
+	"net/http"
+	"soulvent/internal/model"
+	"soulvent/internal/service"
 
-// var UserRepo user.UserRepository
+	"github.com/gin-gonic/gin"
+)
 
-// func CreateUser(w http.ResponseWriter, r *http.Request) {
-// 	var u model.User
-// 	if err := json.NewDecoder(r.Body).Decode(&u); err != nil {
-// 		http.Error(w, "Invalid request", http.StatusBadRequest)
-// 		return
-// 	}
-// 	if err := UserRepo.Create(&u); err != nil {
-// 		http.Error(w, "Failed to create user", http.StatusInternalServerError)
-// 		return
-// 	}
-// 	w.WriteHeader(http.StatusCreated)
-// 	json.NewEncoder(w).Encode(u)
-// }
+func CreateUser(c *gin.Context) {
+	var u model.User
+	if err := c.ShouldBindJSON(&u); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request"})
+        return
+	}
+	if err := service.CreateUser(&u); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create user: " + err.Error()})
+        return
+	}
+	 c.JSON(http.StatusCreated, u)
+}
 
-// func GetUserProfile(w http.ResponseWriter, r *http.Request) {
-// 	// Handle user profile retrieval
-// }
+func GetUserProfile(w http.ResponseWriter, r *http.Request) {
+	// Handle user profile retrieval
+}
