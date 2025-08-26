@@ -4,7 +4,9 @@ type Post struct {
 	ID        string
 	UserID    string
 	Content   string
-	ImageURL  string
+	ImageURLs  []string
 	CreatedAt int64
-	Trending  bool
+	ReactionCount int
+	CommentCount  int
+	HotScore      float64
 }
