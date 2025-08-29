@@ -1,10 +1,12 @@
 package db
 
 import (
+	"fmt"
 	"log"
 	"os"
 	"soulvent/internal/model"
 
+	"github.com/joho/godotenv"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -12,7 +14,12 @@ import (
 var PgDb *gorm.DB
 
 func ConnectPostgresDB() {
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
 	dsn := os.Getenv("DATABASE_URL")
+	fmt.Println("Database URL:", dsn)
 	if dsn == "" {
 		log.Fatal("DATABASE_URL not set in environment")
 	}
@@ -25,9 +32,11 @@ func ConnectPostgresDB() {
 }
 
 func AutoMigrateModels() {
-	err := PgDb.AutoMigrate(&model.User{})
-	if err != nil {
-		log.Fatal("failed to auto-migrate: ", err)
+
+	if err := PgDb.AutoMigrate(&model.User{}); err != nil {
+		log.Fatal("failed to auto-migrate User Model: ", err)
+	} else if err := PgDb.AutoMigrate(&model.Post{}); err != nil {
+		log.Fatal("failed to auto-migrate Post Model: ", err)
 	} else {
 		log.Println("Database migrated successfully")
 	}

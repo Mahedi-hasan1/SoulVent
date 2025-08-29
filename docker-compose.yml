@@ -1,0 +1,12 @@
+services:
+  app:
+    build: 
+      context: .
+      dockerfile: Dockerfile.dev
+    ports:
+      - "8080:8080"
+    volumes:
+      - .:/app          # Mount source code for live reload
+      - /app/tmp        # Exclude tmp directory from host
+    environment:
+      - GO_ENV=development

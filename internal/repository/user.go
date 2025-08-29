@@ -14,3 +14,20 @@ func  CreateUser(user *model.User) error {
 	return nil
 }
 
+func GetUsers(userId, email string) ([]model.User, error) {
+	var users []model.User
+	query := db.PgDb.Model(&model.User{})
+
+	if userId != "" {
+		query = query.Where("id = ?", userId)
+	}
+	if email != "" {
+		query = query.Where("email = ?", email)
+	}
+
+	if err := query.Find(&users).Error; err != nil {
+		return nil, err
+	}
+	return users, nil
+}
+

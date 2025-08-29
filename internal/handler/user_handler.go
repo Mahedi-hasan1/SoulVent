@@ -2,25 +2,36 @@ package handler
 
 import (
 	"net/http"
-	"soulvent/internal/model"
+	"soulvent/internal/dto"
 	"soulvent/internal/service"
-
 	"github.com/gin-gonic/gin"
+	"soulvent/internal/validators"
 )
 
 func CreateUser(c *gin.Context) {
-	var u model.User
-	if err := c.ShouldBindJSON(&u); err != nil {
+	var userReq dto.CreateUserRequest
+	if err := c.ShouldBindJSON(&userReq); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request"})
         return
 	}
-	if err := service.CreateUser(&u); err != nil {
+	if err := validators.ValidateCreateUser(&userReq); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	if err := service.CreateUser(&userReq); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create user: " + err.Error()})
         return
 	}
-	 c.JSON(http.StatusCreated, u)
+	 c.JSON(http.StatusCreated, userReq)
 }
 
-func GetUserProfile(w http.ResponseWriter, r *http.Request) {
-	// Handle user profile retrieval
+func GetUser(c *gin.Context) {
+	userID := c.Query("id")
+    email := c.Query("email")
+	users, err := service.GetUsers(userID, email); 
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to get users: " + err.Error()})
+        return
+	}
+	c.JSON(http.StatusOK, users)
 }

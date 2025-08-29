@@ -10,12 +10,19 @@ import (
 
 func init() {
 	db.ConnectPostgresDB()
-	//db.AutoMigrateModels()
+	db.AutoMigrateModels()
 }
 
 func main() {
 	r := gin.Default()
+
+	//user routes
 	r.POST("/users", handler.CreateUser)
+	r.GET("/users", handler.GetUser)
+
+	//post routes
+	r.POST("/posts", handler.CreatePost)
+
 	log.Println("SoulVent main service running on :8080")
 	r.Run(":8080")
 }
