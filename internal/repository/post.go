@@ -12,3 +12,18 @@ func CreatePost(post *model.Post) error {
 	}
 	return nil
 }
+
+func GetPosts(postID string, userID string) ([]model.Post, error) {
+	var posts []model.Post
+	query := db.PgDb.Model(&model.Post{})
+	if postID != "" {
+		query = query.Where("id = ?", postID)
+	}
+	if userID != "" {
+		query = query.Where("user_id = ?", userID)
+	}
+	if err := query.Find(&posts).Error; err != nil {
+		return nil, err
+	}
+	return posts, nil
+}

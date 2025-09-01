@@ -22,6 +22,11 @@ func main() {
 
 	//post routes
 	r.POST("/posts", handler.CreatePost)
+	r.GET("/posts", handler.GetPost)
+
+	//follower routes
+	r.POST("/followers", handler.CreateFollower)
+	r.GET("/followers", handler.GetFollowers) 
 
 	log.Println("SoulVent main service running on :8080")
 	r.Run(":8080")

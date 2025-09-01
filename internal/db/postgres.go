@@ -37,6 +37,8 @@ func AutoMigrateModels() {
 		log.Fatal("failed to auto-migrate User Model: ", err)
 	} else if err := PgDb.AutoMigrate(&model.Post{}); err != nil {
 		log.Fatal("failed to auto-migrate Post Model: ", err)
+	} else if err := PgDb.AutoMigrate(&model.Follower{}); err != nil {
+		log.Fatal("failed to auto-migrate Follower Model: ", err)
 	} else {
 		log.Println("Database migrated successfully")
 	}

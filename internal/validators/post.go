@@ -4,6 +4,7 @@ import (
 	"errors"
 	"soulvent/internal/dto"
 	"github.com/go-playground/validator/v10"
+	"fmt"
 )
 
 func ValidateCreatePost(postReq *dto.CreatePostRequest) error {
@@ -19,7 +20,7 @@ func ValidateCreatePost(postReq *dto.CreatePostRequest) error {
 		return errors.New("user_id is required")
 	}
 
-	if postReq.Content == "" && (postReq.ImageURLs == nil || len(postReq.ImageURLs) == 0) {
+	if postReq.Content == "" &&  len(postReq.ImageURLs) == 0 {
 		return errors.New("at least one of 'content' or 'image_urls' must be provided")
 	}
 
@@ -27,6 +28,15 @@ func ValidateCreatePost(postReq *dto.CreatePostRequest) error {
 		if len(url) > 500 {
 			return errors.New("each image URL must not exceed 500 characters")
 		}
+	}
+	return nil
+}
+
+func ValidateGetPosts(postID string, userID string) error {
+	fmt.Println("validating get posts request", postID, userID)
+
+	if postID == "" && userID == "" {
+		return errors.New("at least one of 'id' or 'user_id' must be provided")
 	}
 	return nil
 }

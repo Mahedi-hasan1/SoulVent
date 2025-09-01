@@ -14,3 +14,7 @@ func CreatePost(postCreateReq *dto.CreatePostRequest) error {
 	}
 	return repository.CreatePost(post); 
 }
+
+func GetPosts(postID string, userID string) ([]model.Post, error) {
+	return repository.GetPosts(postID, userID); 
+}
