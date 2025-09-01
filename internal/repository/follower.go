@@ -26,3 +26,18 @@ func GetFollowers(userID string, followerID string) ([]model.Follower, error) {
 	}
 	return followers, nil
 }
+
+func GetFollowingIDs(userID string) ([]string, error) {
+	var followingIDs []string
+
+	query := db.PgDb.Model(&model.Follower{}).Select("user_id")
+	if userID != "" {
+		query = query.Where("follower_id = ?", userID)
+	}
+
+	if err := query.Pluck("user_id", &followingIDs).Error; err != nil {
+		return nil, err
+	}
+
+	return followingIDs, nil
+}

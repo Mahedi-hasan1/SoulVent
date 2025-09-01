@@ -10,7 +10,7 @@ import (
 
 func init() {
 	db.ConnectPostgresDB()
-	db.AutoMigrateModels()
+	//db.AutoMigrateModels()
 }
 
 func main() {
@@ -26,7 +26,10 @@ func main() {
 
 	//follower routes
 	r.POST("/followers", handler.CreateFollower)
-	r.GET("/followers", handler.GetFollowers) 
+	r.GET("/followers", handler.GetFollowers)
+
+	//feed routes
+	r.GET("/feed", handler.GetUserFeed)
 
 	log.Println("SoulVent main service running on :8080")
 	r.Run(":8080")
