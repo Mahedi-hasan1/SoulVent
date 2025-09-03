@@ -11,6 +11,7 @@ import (
 func init() {
 	db.ConnectPostgresDB()
 	//db.AutoMigrateModels()
+	db.InitRedis()
 }
 
 func main() {
@@ -30,6 +31,7 @@ func main() {
 
 	//feed routes
 	r.GET("/feed", handler.GetUserFeed)
+	r.DELETE("/feed/clear-old-seen",handler.ClearOldSeenPosts)
 
 	log.Println("SoulVent main service running on :8080")
 	r.Run(":8080")

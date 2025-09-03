@@ -10,3 +10,15 @@ services:
       - /app/tmp        # Exclude tmp directory from host
     environment:
       - GO_ENV=development
+      - REDIS_ADDR=redis:6379
+    depends_on:
+      - redis
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379" 
+    volumes:
+      - redis-data:/data
+    command: ["redis-server", "--appendonly", "yes"]
+volumes:
+  redis-data:

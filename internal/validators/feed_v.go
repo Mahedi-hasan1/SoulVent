@@ -16,3 +16,12 @@ func ValidateGetUserFeed(userID string, page int, limit int) error {
 	}
 	return nil
 }
+
+
+func ValidateClearOldSeenPosts(userID, date string) error {
+	if userID == "" {
+		return errors.New("user_id is required")
+	}
+
+	return nil
+}
