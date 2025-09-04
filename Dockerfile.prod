@@ -6,9 +6,11 @@ RUN go build -o app ./cmd/main.go
 
 
 FROM alpine:latest
+RUN apk --no-cache add ca-certificates
 WORKDIR /app
 COPY --from=builder /app/app .
-COPY .env .
+#COPY .env .
+EXPOSE 10000
 CMD ["./app"]
 
 # run command in terminal : sudo docker build -t docker-learn .
