@@ -4,7 +4,7 @@ import (
 	"log"
 	"soulvent/internal/db"
 	"soulvent/internal/handler"
-
+	"os"
 	"github.com/gin-gonic/gin"
 )
 
@@ -33,6 +33,11 @@ func main() {
 	r.GET("/feed", handler.GetUserFeed)
 	r.DELETE("/feed/clear-old-seen",handler.ClearOldSeenPosts)
 
-	log.Println("SoulVent main service running on :8080")
-	r.Run(":8080")
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080"
+	}
+
+	log.Println("SoulVent main service running on :" + port)
+	r.Run(":" + port)
 }

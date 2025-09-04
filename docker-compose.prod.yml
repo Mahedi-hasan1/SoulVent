@@ -2,17 +2,16 @@ services:
   app:
     build: 
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.prod  # Use production dockerfile
     ports:
       - "8080:8080"
-    volumes:
-      - .:/app          # Mount source code for live reload
-      - /app/tmp        # Exclude tmp directory from host
     environment:
-      - GO_ENV=development
+      - GO_ENV=production
       - REDIS_ADDR=redis:6379
     depends_on:
       - redis
+    restart: unless-stopped
+
   redis:
     image: redis:7-alpine
     ports:
@@ -20,5 +19,7 @@ services:
     volumes:
       - redis-data:/data
     command: ["redis-server", "--appendonly", "yes"]
+    restart: unless-stopped
+
 volumes:
   redis-data:

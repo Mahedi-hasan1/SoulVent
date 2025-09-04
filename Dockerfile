@@ -1,15 +1,14 @@
-FROM golang:1.24.6-alpine as builder
+# Development Dockerfile with Air
+FROM golang:1.24.6-alpine
+
+RUN go install github.com/air-verse/air@latest
+
 WORKDIR /app
+
+COPY go.mod go.sum ./
+RUN go mod download
+
 COPY . .
-RUN go mod tidy
-RUN go build -o app ./cmd/main.go
 
-
-FROM alpine:latest
-WORKDIR /app
-COPY --from=builder /app/app .
-COPY .env .
-CMD ["./app"]
-
-# run command in terminal : sudo docker build -t docker-learn .
-# to run the image : sudo docker run docker-learnt
+EXPOSE 8080
+CMD ["air"]
