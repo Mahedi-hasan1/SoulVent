@@ -7,7 +7,7 @@ import (
 	"time"
 )
 
-func GetUserFeed(userID string, pageNum int, limit int) ([]model.Post, error) {
+func GetUserFeed(userID string, limit int) ([]model.Post, error) {
 
 	seenPostIDs, err := repository.GetSeenPostIDs(userID)
 	if err != nil {
@@ -21,7 +21,7 @@ func GetUserFeed(userID string, pageNum int, limit int) ([]model.Post, error) {
 	}
 	log.Println("followingIds: ", followingIDs)
 
-	posts, err := repository.GetFeedPosts(followingIDs, seenPostIDs, pageNum, limit)
+	posts, err := repository.GetFeedPosts(followingIDs, seenPostIDs, limit)
 	if err != nil {
 		log.Println("Error fetching feed posts:", err)
 		return nil, err

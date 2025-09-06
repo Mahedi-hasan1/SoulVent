@@ -6,6 +6,7 @@ import (
 	"soulvent/internal/handler"
 	"os"
 	"github.com/gin-gonic/gin"
+	"github.com/gin-contrib/cors"
 )
 
 func init() {
@@ -16,6 +17,7 @@ func init() {
 
 func main() {
 	r := gin.Default()
+	r.Use(cors.Default())
 
 	//user routes
 	r.POST("/users", handler.CreateUser)
@@ -23,6 +25,7 @@ func main() {
 
 	//post routes
 	r.POST("/posts", handler.CreatePost)
+	r.POST("/posts-bulk", handler.BulkCreatePosts)
 	r.GET("/posts", handler.GetPost)
 
 	//follower routes
