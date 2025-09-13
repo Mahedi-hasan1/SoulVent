@@ -1,19 +1,23 @@
 package handler
 
 import (
+	"fmt"
 	"net/http"
 	"soulvent/internal/dto"
-	"soulvent/internal/validators"
 	"soulvent/internal/service"
+	"soulvent/internal/validators"
+
 	"github.com/gin-gonic/gin"
 )
 
-func CreateFollower(c *gin.Context){
+func CreateFollower(c *gin.Context) {
 	var followerReq dto.CreateFollowerRequest
 	if err := c.ShouldBindJSON(&followerReq); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request"})
 		return
 	}
+	followerReq.FollowerID = c.GetString("user_id")
+	fmt.Println("follower Request :", followerReq)
 	if err := validators.ValidateCreateFollower(&followerReq); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -26,7 +30,7 @@ func CreateFollower(c *gin.Context){
 }
 
 func GetFollowers(c *gin.Context) {
-	userID := c.Query("user_id")
+	userID := c.GetString("user_id")
 	followerID := c.Query("follower_id")
 	if err := validators.ValidateGetFollowers(userID, followerID); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -37,6 +41,6 @@ func GetFollowers(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to get followers: " + err.Error()})
 		return
 	}
-	c.JSON(http.StatusOK, followers)	
+	c.JSON(http.StatusOK, followers)
 
 }

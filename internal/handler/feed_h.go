@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"log"
 	"net/http"
 	"soulvent/internal/service"
 	"soulvent/internal/validators"
@@ -12,8 +11,7 @@ import (
 )
 
 func GetUserFeed(c *gin.Context) {
-	userID := c.Query("user_id")
-	log.Println("usrId: ", userID)
+	userID := c.GetString("user_id")
 	limit, err := strconv.Atoi(c.DefaultQuery("limit", "5"))
 	if err != nil{
 		c.JSON(400, gin.H{"error": "page and limit should be Integer Value " + err.Error()})
@@ -38,7 +36,7 @@ func GetUserFeed(c *gin.Context) {
 
 
 func MarkPostsViewed(c *gin.Context) {
-    userID := c.Query("user_id")
+    userID := c.GetString("user_id")
     
     var request struct {
         PostIDs []string `json:"post_ids"`
@@ -57,7 +55,7 @@ func MarkPostsViewed(c *gin.Context) {
 }
 
 func ClearOldSeenPosts(c *gin.Context){
-	userId := c.Query("user_id")
+	userId := c.GetString("user_id")
 	cutoffDate := c.Query("date")
 	if cutoffDate == "" {
         cutoffDate = time.Now().Format("2006-01-02 15:04:05")

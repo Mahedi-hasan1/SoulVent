@@ -1,13 +1,17 @@
 package validators
+
 import (
 	"errors"
+	"fmt"
 	"soulvent/internal/dto"
+
 	"github.com/go-playground/validator/v10"
 )
 
 func ValidateCreateFollower(followerReq *dto.CreateFollowerRequest) error {
 	var validate = validator.New()
 	if err := validate.Struct(followerReq); err != nil {
+		fmt.Println("UNVALID STRUCT")
 		return err
 	}
 	if followerReq.UserID == followerReq.FollowerID {

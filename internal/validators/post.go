@@ -7,7 +7,7 @@ import (
 	"fmt"
 )
 
-func ValidateCreatePost(postReq *dto.CreatePostRequest) error {
+func ValidateCreatePost(postReq *dto.CreatePostRequest, userID string) error {
 	validate := validator.New()
 	 if err := validate.Struct(postReq); err != nil {
         return err
@@ -16,7 +16,7 @@ func ValidateCreatePost(postReq *dto.CreatePostRequest) error {
 		return errors.New("request is nil")
 	}
 
-	if postReq.UserID == "" {
+	if userID == "" {
 		return errors.New("user_id is required")
 	}
 

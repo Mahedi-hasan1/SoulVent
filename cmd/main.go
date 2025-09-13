@@ -2,11 +2,13 @@ package main
 
 import (
 	"log"
+	"os"
 	"soulvent/internal/db"
 	"soulvent/internal/handler"
-	"os"
-	"github.com/gin-gonic/gin"
+	"soulvent/internal/middleware"
+
 	"github.com/gin-contrib/cors"
+	"github.com/gin-gonic/gin"
 )
 
 func init() {
@@ -19,22 +21,30 @@ func main() {
 	r := gin.Default()
 	r.Use(cors.Default())
 
-	//user routes
+	//unprotected
 	r.POST("/users", handler.CreateUser)
-	r.GET("/users", handler.GetUser)
+	r.DELETE("/feed/clear-old-seen", handler.ClearOldSeenPosts)
+	r.POST("/login", handler.Login)
+	r.POST("/signup", handler.SignUP)
 
-	//post routes
-	r.POST("/posts", handler.CreatePost)
-	r.POST("/posts-bulk", handler.BulkCreatePosts)
-	r.GET("/posts", handler.GetPost)
+	protected := r.Group("")
 
-	//follower routes
-	r.POST("/followers", handler.CreateFollower)
-	r.GET("/followers", handler.GetFollowers)
+	protected.Use(middleware.AuthMiddleware())
+	{
+		//user routes
+		protected.GET("/users", handler.GetUser)
+		//post routes
+		protected.POST("/posts", handler.CreatePost)
+		protected.POST("/posts-bulk", handler.BulkCreatePosts)
+		protected.GET("/posts", handler.GetPost)
 
-	//feed routes
-	r.GET("/feed", handler.GetUserFeed)
-	r.DELETE("/feed/clear-old-seen",handler.ClearOldSeenPosts)
+		//follower routes
+		protected.POST("/followers", handler.CreateFollower)
+		protected.GET("/followers", handler.GetFollowers)
+
+		//feed routes
+		protected.GET("/feed", handler.GetUserFeed)
+	}
 
 	port := os.Getenv("PORT")
 	if port == "" {

@@ -1,8 +1,9 @@
 package repository
 
 import (
-	"soulvent/internal/model"
+	"fmt"
 	"soulvent/internal/db"
+	"soulvent/internal/model"
 )
 
 
@@ -14,7 +15,7 @@ func  CreateUser(user *model.User) error {
 	return nil
 }
 
-func GetUsers(userId, email string) ([]model.User, error) {
+func GetUsers(userId, email, username string) ([]model.User, error) {
 	var users []model.User
 	query := db.PgDb.Model(&model.User{})
 
@@ -24,8 +25,12 @@ func GetUsers(userId, email string) ([]model.User, error) {
 	if email != "" {
 		query = query.Where("email = ?", email)
 	}
+	if username != "" {
+		query = query.Where("username = ?", username)
+	}
 
 	if err := query.Find(&users).Error; err != nil {
+		fmt.Println("Error in getting users")
 		return nil, err
 	}
 	return users, nil

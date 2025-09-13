@@ -26,9 +26,10 @@ func CreateUser(c *gin.Context) {
 }
 
 func GetUser(c *gin.Context) {
-	userID := c.Query("id")
+	userID := c.GetString("user_id")
     email := c.Query("email")
-	users, err := service.GetUsers(userID, email); 
+	username := c.Query("username")
+	users, err := service.GetUsers(userID, email, username); 
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to get users: " + err.Error()})
         return

@@ -25,6 +25,6 @@ func CreateUser(userReq *dto.CreateUserRequest) error {
 	return nil
 }
 
-func GetUsers(userId, email string) ([]model.User, error){
-	return repository.GetUsers(userId, email)
+func GetUsers(userId, email, username string) ([]model.User, error){
+	return repository.GetUsers(userId, email, username)
 }
