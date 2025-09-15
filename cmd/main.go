@@ -19,7 +19,13 @@ func init() {
 
 func main() {
 	r := gin.Default()
-	r.Use(cors.Default())
+	r.Use(cors.New(cors.Config{
+		AllowOrigins:     []string{"http://localhost:3000", "https://soulvent-frontend.vercel.app"},
+		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowHeaders:     []string{"Origin", "Content-Length", "Content-Type", "Authorization"},
+		ExposeHeaders:    []string{"Content-Length"},
+		AllowCredentials: true,
+	}))
 
 	//unprotected
 	r.POST("/users", handler.CreateUser)
@@ -27,12 +33,13 @@ func main() {
 	r.POST("/login", handler.Login)
 	r.POST("/signup", handler.SignUP)
 
+	//protected
 	protected := r.Group("")
-
 	protected.Use(middleware.AuthMiddleware())
 	{
 		//user routes
 		protected.GET("/users", handler.GetUser)
+		protected.GET("/suggested-users", handler.GetSuggestedUsers)
 		//post routes
 		protected.POST("/posts", handler.CreatePost)
 		protected.POST("/posts-bulk", handler.BulkCreatePosts)

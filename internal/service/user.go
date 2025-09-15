@@ -28,3 +28,7 @@ func CreateUser(userReq *dto.CreateUserRequest) error {
 func GetUsers(userId, email, username string) ([]model.User, error){
 	return repository.GetUsers(userId, email, username)
 }
+
+func GetSuggestedUsers(userId string, limit int) ([]model.User, error){
+	return repository.GetSuggestedUsers(userId, limit)
+}

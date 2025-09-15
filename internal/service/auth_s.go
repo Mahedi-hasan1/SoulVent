@@ -6,6 +6,7 @@ import (
 	"os"
 	"soulvent/internal/model"
 	"soulvent/internal/repository"
+	"strings"
 	"time"
 
 	"github.com/golang-jwt/jwt"
@@ -13,13 +14,12 @@ import (
 )
 
 func SignUP(username, email, password, gender, city string) (*model.User, string, error) {
-	fmt.Println("Calling Db for exitsting user")
+	username =  strings.ToLower(username)
+	email = strings.ToLower(email)
 	existingUser, _ := repository.GetUsers("", email, username)
-	fmt.Println("existing user: ", existingUser)
 	if len(existingUser) != 0 {
 		return nil, "", errors.New("username or email already exists")
 	}
-	fmt.Println("generating hash")
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	if err != nil {
 		return nil, "", err
@@ -32,14 +32,11 @@ func SignUP(username, email, password, gender, city string) (*model.User, string
 		Gender:       gender,
 		City:         city,
 	}
-	fmt.Println("Creating User")
 	err = repository.CreateUser(user)
 	if err != nil {
 		return nil, "", err
 	}
-	fmt.Println("Generating Token")
 	token, err := generateToken(user)
-
 	if err != nil {
 		return nil, "", err
 	}
@@ -48,10 +45,15 @@ func SignUP(username, email, password, gender, city string) (*model.User, string
 }
 
 func LogIn(usernameOrEmail, password string) (*model.User, string, error) {
+	//make lower case
+	usernameOrEmail =  strings.ToLower(usernameOrEmail)
 
-	users, err := repository.GetUsers("", usernameOrEmail, usernameOrEmail)
+	users, err := repository.GetUsers("", usernameOrEmail,"")
 	if err != nil || users == nil || len(users) == 0 {
-		return nil, "", errors.New("invalid credentials, no user found")
+		users, err = repository.GetUsers("", "", usernameOrEmail)
+		if err != nil || users == nil || len(users) == 0 {
+			return nil, "", errors.New("invalid username or email, no user found ")
+		}
 	}
 	user := users[0]
 	err = bcrypt.CompareHashAndPassword([]byte(user.PasswordHash), []byte(password))
