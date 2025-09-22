@@ -32,6 +32,7 @@ func main() {
 	r.DELETE("/feed/clear-old-seen", handler.ClearOldSeenPosts)
 	r.POST("/login", handler.Login)
 	r.POST("/signup", handler.SignUP)
+	r.POST("/posts-bulk", handler.BulkCreatePosts)
 
 	//protected
 	protected := r.Group("")
@@ -42,7 +43,6 @@ func main() {
 		protected.GET("/suggested-users", handler.GetSuggestedUsers)
 		//post routes
 		protected.POST("/posts", handler.CreatePost)
-		protected.POST("/posts-bulk", handler.BulkCreatePosts)
 		protected.GET("/posts", handler.GetPost)
 
 		//follower routes

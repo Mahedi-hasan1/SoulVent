@@ -1,36 +1,49 @@
 package service
 
 import (
+	"errors"
 	"log"
 	"soulvent/internal/dto"
 	"soulvent/internal/model"
 	"soulvent/internal/repository"
+	"time"
 )
 
 func CreatePost(postCreateReq *dto.CreatePostRequest, userID string) error {
 	post := &model.Post{
-		UserID:  userID,
-		Content: postCreateReq.Content,
+		UserID:    userID,
+		Content:   postCreateReq.Content,
 		ImageURLs: postCreateReq.ImageURLs,
 	}
-	return repository.CreatePost(post); 
+	return repository.CreatePost(post)
 }
 
 func GetPosts(postID string, userID string) ([]model.Post, error) {
-	return repository.GetPosts(postID, userID); 
+	return repository.GetPosts(postID, userID)
 }
-func BulkCreatePost(postsCreateReq *[]dto.CreatePostRequest, userID string) error {
-	for _, postCreateReq := range *postsCreateReq{
+func BulkCreatePost(postsCreateReq *[]dto.CreatePostRequest, username string) error {
+	now := time.Now()
+	users, err := repository.GetUsers("", "", username)
+	if err != nil {
+		return err
+	}
+	if len(users) == 0 {
+		return errors.New("No User found of this username")
+	}
+
+	for i, postCreateReq := range *postsCreateReq {
+		createdAt := now.Add(time.Duration(-i*24) * time.Hour)
 		post := &model.Post{
-			UserID:  userID,
-			Content: postCreateReq.Content,
+			UserID:    users[0].ID,
+			Content:   postCreateReq.Content,
 			ImageURLs: postCreateReq.ImageURLs,
+			CreatedAt: createdAt,
 		}
-		if err := repository.CreatePost(post); err != nil{
+		if err := repository.CreatePost(post); err != nil {
 			log.Panicln("post not created. details: ", post)
-		}else{
+		} else {
 			log.Println("post created: details", post.Content)
 		}
-	} 
+	}
 	return nil
 }

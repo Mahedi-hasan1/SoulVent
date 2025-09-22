@@ -27,7 +27,7 @@ func CreatePost(c *gin.Context) {
 
 func GetPost(c *gin.Context) {
 	postID := c.Query("id")
-	userID := c.Query("user_id")
+	userID := c.GetString("user_id")
 	if err := validators.ValidateGetPosts(postID, userID); err != nil {
 		c.JSON(400, gin.H{"error": err.Error()})
 		return
@@ -40,13 +40,13 @@ func GetPost(c *gin.Context) {
 }
 
 func BulkCreatePosts(c *gin.Context){
-	userID := c.GetString("user_id")
+	username := c.Query("user_name")
 	var postsCreateReq  []dto.CreatePostRequest
 	if err := c.ShouldBindJSON(&postsCreateReq); err != nil {
 		c.JSON(400, gin.H{"error": "Invalid request"})
 		return
 	}
-	if err := service.BulkCreatePost(&postsCreateReq, userID); err != nil {
+	if err := service.BulkCreatePost(&postsCreateReq, username); err != nil {
 		c.JSON(500, gin.H{"error": "Failed to create post: " + err.Error()})
 		return
 	}
