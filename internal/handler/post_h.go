@@ -4,6 +4,8 @@ import (
 	"soulvent/internal/dto"
 	"soulvent/internal/service"
 	"soulvent/internal/validators"
+	"strconv"
+
 	"github.com/gin-gonic/gin"
 )
 
@@ -25,14 +27,18 @@ func CreatePost(c *gin.Context) {
 	c.JSON(201, postCreateReq)
 }
 
-func GetPost(c *gin.Context) {
-	postID := c.Query("id")
+func GetUserPost(c *gin.Context) {
 	userID := c.GetString("user_id")
-	if err := validators.ValidateGetPosts(postID, userID); err != nil {
+	limit, err := strconv.Atoi(c.DefaultQuery("limit", "5"))
+	if err != nil{
+		c.JSON(400, gin.H{"error": "page and limit should be Integer Value " + err.Error()})
+	}
+	
+	if err := validators.ValidateGetUserPosts(userID, limit); err != nil {
 		c.JSON(400, gin.H{"error": err.Error()})
 		return
 	}
-	posts, err := service.GetPosts(postID, userID)
+	posts, err := service.GetUserPosts(userID, limit)
 	if err != nil {
 		c.JSON(500, gin.H{"error": "Failed to get posts: " + err.Error()})
 	}

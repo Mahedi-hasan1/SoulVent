@@ -18,8 +18,8 @@ func CreatePost(postCreateReq *dto.CreatePostRequest, userID string) error {
 	return repository.CreatePost(post)
 }
 
-func GetPosts(postID string, userID string) ([]model.Post, error) {
-	return repository.GetPosts(postID, userID)
+func GetUserPosts(userID string, limit int) ([]dto.UserPostResponse, error) {
+	return repository.GetUserPosts(userID, limit)
 }
 func BulkCreatePost(postsCreateReq *[]dto.CreatePostRequest, username string) error {
 	now := time.Now()

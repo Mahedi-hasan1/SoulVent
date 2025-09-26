@@ -43,7 +43,7 @@ func main() {
 		protected.GET("/suggested-users", handler.GetSuggestedUsers)
 		//post routes
 		protected.POST("/posts", handler.CreatePost)
-		protected.GET("/posts", handler.GetPost)
+		protected.GET("/posts", handler.GetUserPost)
 
 		//follower routes
 		protected.POST("/followers", handler.CreateFollower)
@@ -51,6 +51,11 @@ func main() {
 
 		//feed routes
 		protected.GET("/feed", handler.GetUserFeed)
+
+		//search routes
+		protected.POST("/searches", handler.AddSearchHistroy)
+		protected.GET("/searches", handler.GetSearchUsers)
+		protected.GET("search-history", handler.GetSearchHistory)
 	}
 
 	port := os.Getenv("PORT")

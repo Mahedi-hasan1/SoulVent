@@ -5,6 +5,7 @@ import (
 	"soulvent/internal/model"
 	"soulvent/internal/repository"
 	"soulvent/internal/util"
+	"strings"
 )
 
 func CreateUser(userReq *dto.CreateUserRequest) error {
@@ -12,11 +13,12 @@ func CreateUser(userReq *dto.CreateUserRequest) error {
 	if err != nil {
 		return err
 	}
+	username := strings.ReplaceAll(userReq.Username, " ", "_")
 	user := &model.User{
-		Username: userReq.Username,
-		Gender: userReq.Gender,
-		City:   userReq.City,
-		Email:    userReq.Email,
+		Username:     username,
+		Gender:       userReq.Gender,
+		City:         userReq.City,
+		Email:        userReq.Email,
 		PasswordHash: hashedPassword,
 	}
 	if err := repository.CreateUser(user); err != nil {
@@ -25,10 +27,10 @@ func CreateUser(userReq *dto.CreateUserRequest) error {
 	return nil
 }
 
-func GetUsers(userId, email, username string) ([]model.User, error){
+func GetUsers(userId, email, username string) ([]model.User, error) {
 	return repository.GetUsers(userId, email, username)
 }
 
-func GetSuggestedUsers(userId string, limit int) ([]model.User, error){
+func GetSuggestedUsers(userId string, limit int) ([]model.User, error) {
 	return repository.GetSuggestedUsers(userId, limit)
 }

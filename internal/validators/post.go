@@ -4,7 +4,6 @@ import (
 	"errors"
 	"soulvent/internal/dto"
 	"github.com/go-playground/validator/v10"
-	"fmt"
 )
 
 func ValidateCreatePost(postReq *dto.CreatePostRequest, userID string) error {
@@ -32,11 +31,13 @@ func ValidateCreatePost(postReq *dto.CreatePostRequest, userID string) error {
 	return nil
 }
 
-func ValidateGetPosts(postID string, userID string) error {
-	fmt.Println("validating get posts request", postID, userID)
+func ValidateGetUserPosts(userID string, limit int) error {
 
-	if postID == "" && userID == "" {
-		return errors.New("at least one of 'id' or 'user_id' must be provided")
+	if userID == "" {
+		return errors.New("user_id is required")
+	}
+	if limit <= 0 || limit > 100 {
+		return errors.New("limit must be a positive integer between 1 and 100")
 	}
 	return nil
 }

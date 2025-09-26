@@ -2,6 +2,7 @@ package repository
 
 import (
 	"soulvent/internal/db"
+	"soulvent/internal/dto"
 	"soulvent/internal/model"
 )
 
@@ -13,16 +14,16 @@ func CreatePost(post *model.Post) error {
 	return nil
 }
 
-func GetPosts(postID string, userID string) ([]model.Post, error) {
-	var posts []model.Post
-	query := db.PgDb.Model(&model.Post{})
-	if postID != "" {
-		query = query.Where("id = ?", postID)
-	}
-	if userID != "" {
-		query = query.Where("user_id = ?", userID)
-	}
-	if err := query.Find(&posts).Error; err != nil {
+func GetUserPosts(userID string, limit int) ([]dto.UserPostResponse, error) {
+	var posts []dto.UserPostResponse
+
+	err := db.PgDb.Model(&model.Post{}).
+		Select("id", "user_id", "content", "image_urls", "reaction_count", "comment_count", "created_at", "updated_at").
+		Where("user_id = ?", userID).
+		Limit(limit).
+		Find(&posts).Error
+
+	if err != nil {
 		return nil, err
 	}
 	return posts, nil
