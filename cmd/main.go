@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	"net/http"
 	"os"
 	"soulvent/internal/db"
 	"soulvent/internal/handler"
@@ -28,6 +29,7 @@ func main() {
 	}))
 
 	//unprotected
+	r.GET("/health", health)
 	r.POST("/users", handler.CreateUser)
 	r.DELETE("/feed/clear-old-seen", handler.ClearOldSeenPosts)
 	r.POST("/login", handler.Login)
@@ -64,5 +66,13 @@ func main() {
 	}
 
 	log.Println("SoulVent main service running on :" + port)
-	r.Run(":" + port)
+	if err := r.Run("0.0.0.0:" + port); err != nil {
+        log.Fatal("Failed to start server:", err)
+    }
+}
+
+func health(c *gin.Context){
+	c.JSON(http.StatusOK, gin.H{
+		"status": "ok",
+	})
 }
