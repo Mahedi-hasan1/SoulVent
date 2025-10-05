@@ -8,4 +8,5 @@ type Search struct {
 	User      User      `json:"-" gorm:"foreignKey:UserID;references:ID;constraint:OnDelete:CASCADE"`
 	Query     string    `json:"query" gorm:"type:text;not null"`
 	CreatedAt time.Time `json:"created_at" gorm:"default:CURRENT_TIMESTAMP"`
+	UpdatedAt time.Time `json:"updated_at" gorm:"default:CURRENT_TIMESTAMP;autoUpdateTime"`
 }
