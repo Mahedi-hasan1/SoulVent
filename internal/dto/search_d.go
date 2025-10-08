@@ -19,8 +19,9 @@ type SearchResponse struct {
 type SearchUser struct {
 	ID             string    `json:"id"`
 	Username       string    `json:"username"`
-	FollowerCount  int       `json:"follower_count"`
-	FollowingCount int       `json:"following_count"`
+	PostCount	   int64       `json:"post_count"`
+	FollowerCount  int64       `json:"follower_count"`
+	FollowingCount int64       `json:"following_count"`
 	IsFollowing    bool      `json:"is_following"` // Whether current user follows this user
 	JoinedAt       time.Time `json:"joined_at"`
 }

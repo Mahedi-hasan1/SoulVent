@@ -10,7 +10,7 @@ import (
 	"gorm.io/gorm"
 )
 
-func SearchUsers(query, userId string, page, limit int) ([]dto.SearchUser, error) {
+func SearchResult(query, userId string, page, limit int) ([]dto.SearchUser, error) {
 	offset := (page - 1) * limit
 	var users []model.User
 
@@ -33,7 +33,10 @@ func SearchUsers(query, userId string, page, limit int) ([]dto.SearchUser, error
 		userResult := dto.SearchUser{
 			ID:          user.ID,
 			Username:    user.Username,
-			IsFollowing: isFollowing(userId, user.ID),
+			IsFollowing: IsFollowing(userId, user.ID),
+			PostCount: CountPost(user.ID),
+			FollowerCount: CountFollower(user.ID),
+			FollowingCount: CountFollowing(user.ID),
 			JoinedAt:    user.CreatedAt,
 		}
 		results = append(results, userResult)
@@ -70,13 +73,4 @@ func GetSearches(userID string, limit int) ([]*model.Search, error) {
 	return searches, nil
 }
 
-func isFollowing(currentUserID, targetUserID string) bool {
-	if currentUserID == targetUserID {
-		return false
-	}
-	var count int64
-	db.PgDb.Model(&model.Follower{}).
-		Where("user_id = ? AND follower_id = ?", targetUserID, currentUserID).
-		Count(&count)
-	return count > 0
-}
+

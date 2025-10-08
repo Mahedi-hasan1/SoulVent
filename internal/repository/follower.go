@@ -41,3 +41,26 @@ func GetFollowingIDs(userID string) ([]string, error) {
 
 	return followingIDs, nil
 }
+
+func IsFollowing(currentUserID, targetUserID string) bool {
+	if currentUserID == targetUserID {
+		return false
+	}
+	var count int64
+	db.PgDb.Model(&model.Follower{}).
+		Where("user_id = ? AND follower_id = ?", targetUserID, currentUserID).
+		Count(&count)
+	return count > 0
+}
+
+func CountFollower(userID string) int64 {
+	var count int64
+	db.PgDb.Model(&model.Follower{}).Where("user_id = ?", userID).Count(&count)
+	return count
+}
+
+func CountFollowing(userID string) int64 {
+	var count int64
+	db.PgDb.Model(&model.Follower{}).Where("follower_id = ?",userID).Count(&count)
+	return count
+}

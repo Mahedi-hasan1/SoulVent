@@ -50,3 +50,10 @@ func GetFeedPosts(followingIDs []string, seenPostIDs []string, limit int) ([]mod
 	}
 	return posts, nil
 }
+
+
+func CountPost(userID string) int64 {
+	var count int64
+	db.PgDb.Model(model.Post{}).Where("user_id = ?",userID).Count(&count)
+	return count
+}

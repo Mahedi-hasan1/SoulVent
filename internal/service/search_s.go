@@ -6,9 +6,9 @@ import (
 	"soulvent/internal/repository"
 )
 
-func SearchUsers(userId string , searchReq *dto.SearchRequest)(*dto.SearchResponse, error){
+func SearchResult(userId string , searchReq *dto.SearchRequest)(*dto.SearchResponse, error){
 	// Get users with pagination
-	users, err := repository.SearchUsers(searchReq.Query, userId, searchReq.Page, searchReq.Limit)
+	users, err := repository.SearchResult(searchReq.Query, userId, searchReq.Page, searchReq.Limit)
 	if err != nil {
 		return nil, err
 	}

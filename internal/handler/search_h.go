@@ -12,7 +12,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func GetSearchUsers(c *gin.Context) {
+func GetSearchResult(c *gin.Context) {
 	userID := c.GetString("user_id")
 	if userID=="" {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
@@ -29,7 +29,7 @@ func GetSearchUsers(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	result, err := service.SearchUsers(userID, searchReq)
+	result, err := service.SearchResult(userID, searchReq)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Search failed"})
 		return

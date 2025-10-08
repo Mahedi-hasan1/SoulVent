@@ -56,7 +56,7 @@ func main() {
 
 		//search routes
 		protected.POST("/searches", handler.AddSearchHistroy)
-		protected.GET("/searches", handler.GetSearchUsers)
+		protected.GET("/searches", handler.GetSearchResult)
 		protected.GET("search-history", handler.GetSearchHistory)
 	}
 
