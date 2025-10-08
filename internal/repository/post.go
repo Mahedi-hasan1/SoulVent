@@ -14,12 +14,14 @@ func CreatePost(post *model.Post) error {
 	return nil
 }
 
-func GetUserPosts(userID string, limit int) ([]dto.UserPostResponse, error) {
+func GetPostsByUsername(username string, limit int) ([]dto.UserPostResponse, error) {
 	var posts []dto.UserPostResponse
 
 	err := db.PgDb.Model(&model.Post{}).
-		Select("id", "user_id", "content", "image_urls", "reaction_count", "comment_count", "created_at", "updated_at").
-		Where("user_id = ?", userID).
+		Select("posts.id", "user_id", "content", "image_urls", "reaction_count", "comment_count", "posts.created_at", "posts.updated_at").
+		Joins("JOIN users ON posts.user_id = users.id").
+		Where("users.username = ?", username).
+		Order("posts.created_at DESC").
 		Limit(limit).
 		Find(&posts).Error
 
@@ -51,9 +53,8 @@ func GetFeedPosts(followingIDs []string, seenPostIDs []string, limit int) ([]mod
 	return posts, nil
 }
 
-
 func CountPost(userID string) int64 {
 	var count int64
-	db.PgDb.Model(model.Post{}).Where("user_id = ?",userID).Count(&count)
+	db.PgDb.Model(model.Post{}).Where("user_id = ?", userID).Count(&count)
 	return count
 }

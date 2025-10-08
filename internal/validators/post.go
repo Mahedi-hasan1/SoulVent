@@ -31,10 +31,10 @@ func ValidateCreatePost(postReq *dto.CreatePostRequest, userID string) error {
 	return nil
 }
 
-func ValidateGetUserPosts(userID string, limit int) error {
+func ValidateGetUserPosts(username string, limit int) error {
 
-	if userID == "" {
-		return errors.New("user_id is required")
+	if username == "" {
+		return errors.New("username is required")
 	}
 	if limit <= 0 || limit > 100 {
 		return errors.New("limit must be a positive integer between 1 and 100")

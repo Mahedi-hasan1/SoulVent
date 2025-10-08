@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"fmt"
 	"net/http"
 	"soulvent/internal/dto"
 	"soulvent/internal/service"
@@ -27,11 +28,14 @@ func CreateUser(c *gin.Context) {
 	c.JSON(http.StatusCreated, userReq)
 }
 
-func GetUser(c *gin.Context) {
-	userID := c.GetString("user_id")
-	email := c.Query("email")
+func GetUserByUsername(c *gin.Context) {
 	username := c.Query("username")
-	users, err := service.GetUsers(userID, email, username)
+	fmt.Println("username; ", username)
+	if username == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "username required"})
+		return
+	}
+	users, err := service.GetUserByUsername(username)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to get users: " + err.Error()})
 		return

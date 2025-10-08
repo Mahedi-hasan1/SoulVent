@@ -30,6 +30,7 @@ func main() {
 
 	//unprotected
 	r.GET("/", health)
+	r.HEAD("/", health)
 	r.POST("/users", handler.CreateUser)
 	r.DELETE("/feed/clear-old-seen", handler.ClearOldSeenPosts)
 	r.POST("/login", handler.Login)
@@ -41,7 +42,7 @@ func main() {
 	protected.Use(middleware.AuthMiddleware())
 	{
 		//user routes
-		protected.GET("/users", handler.GetUser)
+		protected.GET("/users", handler.GetUserByUsername)
 		protected.GET("/suggested-users", handler.GetSuggestedUsers)
 		//post routes
 		protected.POST("/posts", handler.CreatePost)

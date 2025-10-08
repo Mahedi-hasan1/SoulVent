@@ -18,23 +18,23 @@ func CreatePost(postCreateReq *dto.CreatePostRequest, userID string) error {
 	return repository.CreatePost(post)
 }
 
-func GetUserPosts(userID string, limit int) ([]dto.UserPostResponse, error) {
-	return repository.GetUserPosts(userID, limit)
+func GetUserPosts(username string, limit int) ([]dto.UserPostResponse, error) {
+	return repository.GetPostsByUsername(username, limit)
 }
 func BulkCreatePost(postsCreateReq *[]dto.CreatePostRequest, username string) error {
 	now := time.Now()
-	users, err := repository.GetUsers("", "", username)
+	user, err := repository.GetUser("", "", username)
 	if err != nil {
 		return err
 	}
-	if len(users) == 0 {
+	if user == nil {
 		return errors.New("No User found of this username")
 	}
 
 	for i, postCreateReq := range *postsCreateReq {
 		createdAt := now.Add(time.Duration(-i*24) * time.Hour)
 		post := &model.Post{
-			UserID:    users[0].ID,
+			UserID:    user.ID,
 			Content:   postCreateReq.Content,
 			ImageURLs: postCreateReq.ImageURLs,
 			CreatedAt: createdAt,

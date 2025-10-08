@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"fmt"
 	"soulvent/internal/db"
 	"soulvent/internal/model"
 )
@@ -12,8 +13,8 @@ func CreateUser(user *model.User) error {
 	return nil
 }
 
-func GetUsers(userId, email, username string) ([]model.User, error) {
-	var users []model.User
+func GetUser(userId, email, username string) (*model.User, error) {
+	var user model.User
 	query := db.PgDb.Model(&model.User{})
 
 	if userId != "" {
@@ -26,10 +27,12 @@ func GetUsers(userId, email, username string) ([]model.User, error) {
 		query = query.Where("username = ?", username)
 	}
 
-	if err := query.Find(&users).Error; err != nil {
+	if err := query.Find(&user).Error; err != nil {
 		return nil, err
 	}
-	return users, nil
+	fmt.Println("username, id , email in repo: ", username, userId, email)
+	fmt.Println(user)
+	return &user, nil
 }
 
 func GetSuggestedUsers(userId string, limit int) ([]model.User, error) {

@@ -27,8 +27,20 @@ func CreateUser(userReq *dto.CreateUserRequest) error {
 	return nil
 }
 
-func GetUsers(userId, email, username string) ([]model.User, error) {
-	return repository.GetUsers(userId, email, username)
+func GetUserByUsername(username string) (dto.UserResponse, error) {
+	user, _ := repository.GetUser("", "", username)
+	userRes := dto.UserResponse{
+		ID:             user.ID,
+		Username:       user.Username,
+		Gender:         user.Gender,
+		Email:          user.Email,
+		City:           user.City,
+		PostCount:      repository.CountPost(user.ID),
+		FollowerCount:  repository.CountFollower(user.ID),
+		FollowingCount: repository.CountFollowing(user.ID),
+		CreatedAt:      user.CreatedAt,
+	}
+	return userRes, nil
 }
 
 func GetSuggestedUsers(userId string, limit int) ([]model.User, error) {

@@ -11,7 +11,7 @@ import (
 
 func CreatePost(c *gin.Context) {
 	userID := c.GetString("user_id")
-	var postCreateReq  dto.CreatePostRequest
+	var postCreateReq dto.CreatePostRequest
 	if err := c.ShouldBindJSON(&postCreateReq); err != nil {
 		c.JSON(400, gin.H{"error": "Invalid request"})
 		return
@@ -28,26 +28,26 @@ func CreatePost(c *gin.Context) {
 }
 
 func GetUserPost(c *gin.Context) {
-	userID := c.GetString("user_id")
-	limit, err := strconv.Atoi(c.DefaultQuery("limit", "5"))
-	if err != nil{
+	limit, err := strconv.Atoi(c.DefaultQuery("limit", "20"))
+	username := c.Query("username")
+	if err != nil {
 		c.JSON(400, gin.H{"error": "page and limit should be Integer Value " + err.Error()})
 	}
-	
-	if err := validators.ValidateGetUserPosts(userID, limit); err != nil {
+
+	if err := validators.ValidateGetUserPosts(username, limit); err != nil {
 		c.JSON(400, gin.H{"error": err.Error()})
 		return
 	}
-	posts, err := service.GetUserPosts(userID, limit)
+	posts, err := service.GetUserPosts(username, limit)
 	if err != nil {
 		c.JSON(500, gin.H{"error": "Failed to get posts: " + err.Error()})
 	}
 	c.JSON(200, posts)
 }
 
-func BulkCreatePosts(c *gin.Context){
+func BulkCreatePosts(c *gin.Context) {
 	username := c.Query("user_name")
-	var postsCreateReq  []dto.CreatePostRequest
+	var postsCreateReq []dto.CreatePostRequest
 	if err := c.ShouldBindJSON(&postsCreateReq); err != nil {
 		c.JSON(400, gin.H{"error": "Invalid request"})
 		return

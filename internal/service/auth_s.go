@@ -16,9 +16,13 @@ import (
 func SignUP(username, email, password, gender, city string) (*model.User, string, error) {
 	username = strings.ToLower(username)
 	email = strings.ToLower(email)
-	existingUser, _ := repository.GetUsers("", email, username)
-	if len(existingUser) != 0 {
-		return nil, "", errors.New("username or email already exists")
+	existingUser, _ := repository.GetUser("", email, "")
+	if existingUser != nil {
+		return nil, "", errors.New("email already exists")
+	}
+	existingUser, _ = repository.GetUser("", "", username)
+	if existingUser != nil {
+		return nil, "", errors.New("username already exists")
 	}
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	if err != nil {
@@ -48,25 +52,24 @@ func LogIn(usernameOrEmail, password string) (*model.User, string, error) {
 	//make lower case
 	usernameOrEmail = strings.ToLower(usernameOrEmail)
 
-	users, err := repository.GetUsers("", usernameOrEmail, "")
-	if err != nil || users == nil || len(users) == 0 {
-		users, err = repository.GetUsers("", "", usernameOrEmail)
-		if err != nil || users == nil || len(users) == 0 {
+	user, err := repository.GetUser("", usernameOrEmail, "")
+	if err != nil || user == nil {
+		user, err = repository.GetUser("", "", usernameOrEmail)
+		if err != nil || user == nil{
 			return nil, "", errors.New("invalid username or email, no user found ")
 		}
 	}
-	user := users[0]
 	err = bcrypt.CompareHashAndPassword([]byte(user.PasswordHash), []byte(password))
 	if err != nil {
 		return nil, "", errors.New("invalid credentials")
 	}
 
-	token, err := generateToken(&user)
+	token, err := generateToken(user)
 	if err != nil {
 		return nil, "", err
 	}
 
-	return &user, token, nil
+	return user, token, nil
 }
 
 func generateToken(user *model.User) (string, error) {

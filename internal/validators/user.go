@@ -21,3 +21,4 @@ func ValidateCreateUser(userReq *dto.CreateUserRequest) error {
     }
 	return nil
 }
+
