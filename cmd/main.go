@@ -29,7 +29,7 @@ func main() {
 	}))
 
 	//unprotected
-	r.GET("/health", health)
+	r.GET("/", health)
 	r.POST("/users", handler.CreateUser)
 	r.DELETE("/feed/clear-old-seen", handler.ClearOldSeenPosts)
 	r.POST("/login", handler.Login)
@@ -67,11 +67,11 @@ func main() {
 
 	log.Println("SoulVent main service running on :" + port)
 	if err := r.Run("0.0.0.0:" + port); err != nil {
-        log.Fatal("Failed to start server:", err)
-    }
+		log.Fatal("Failed to start server:", err)
+	}
 }
 
-func health(c *gin.Context){
+func health(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"status": "ok",
 	})

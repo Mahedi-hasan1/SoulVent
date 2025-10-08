@@ -14,7 +14,7 @@ import (
 )
 
 func SignUP(username, email, password, gender, city string) (*model.User, string, error) {
-	username =  strings.ToLower(username)
+	username = strings.ToLower(username)
 	email = strings.ToLower(email)
 	existingUser, _ := repository.GetUsers("", email, username)
 	if len(existingUser) != 0 {
@@ -46,9 +46,9 @@ func SignUP(username, email, password, gender, city string) (*model.User, string
 
 func LogIn(usernameOrEmail, password string) (*model.User, string, error) {
 	//make lower case
-	usernameOrEmail =  strings.ToLower(usernameOrEmail)
+	usernameOrEmail = strings.ToLower(usernameOrEmail)
 
-	users, err := repository.GetUsers("", usernameOrEmail,"")
+	users, err := repository.GetUsers("", usernameOrEmail, "")
 	if err != nil || users == nil || len(users) == 0 {
 		users, err = repository.GetUsers("", "", usernameOrEmail)
 		if err != nil || users == nil || len(users) == 0 {

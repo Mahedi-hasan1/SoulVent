@@ -13,7 +13,7 @@ func GetUserFeed(userID string, limit int) ([]model.Post, error) {
 	if err != nil {
 		log.Println("Error fetching seen posts:", err)
 	}
-	log.Println("seen post ids of user: ", userID, "PostIDs: ", seenPostIDs)
+	//log.Println("seen post ids of user: ", userID, "PostIDs: ", seenPostIDs)
 	followingIDs, err := repository.GetFollowingIDs(userID)
 	if err != nil {
 		log.Println("Error fetching following IDs:", err)
