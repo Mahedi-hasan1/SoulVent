@@ -1,7 +1,6 @@
 package repository
 
 import (
-	"fmt"
 	"soulvent/internal/db"
 	"soulvent/internal/model"
 )
@@ -27,11 +26,9 @@ func GetUser(userId, email, username string) (*model.User, error) {
 		query = query.Where("username = ?", username)
 	}
 
-	if err := query.Find(&user).Error; err != nil {
+	if err := query.First(&user).Error; err != nil {
 		return nil, err
 	}
-	fmt.Println("username, id , email in repo: ", username, userId, email)
-	fmt.Println(user)
 	return &user, nil
 }
 

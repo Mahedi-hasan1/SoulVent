@@ -27,7 +27,7 @@ func CreatePost(c *gin.Context) {
 	c.JSON(201, postCreateReq)
 }
 
-func GetUserPost(c *gin.Context) {
+func GetPostsByUsername(c *gin.Context) {
 	limit, err := strconv.Atoi(c.DefaultQuery("limit", "20"))
 	username := c.Query("username")
 	if err != nil {

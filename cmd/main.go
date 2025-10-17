@@ -46,7 +46,7 @@ func main() {
 		protected.GET("/suggested-users", handler.GetSuggestedUsers)
 		//post routes
 		protected.POST("/posts", handler.CreatePost)
-		protected.GET("/posts", handler.GetUserPost)
+		protected.GET("/posts", handler.GetPostsByUsername)
 
 		//follower routes
 		protected.POST("/followers", handler.CreateFollower)
