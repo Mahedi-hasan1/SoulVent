@@ -63,7 +63,7 @@ func MarkPostSeen(userID, postID string) error {
         return fmt.Errorf("missing 'result' in response")
     }
 
-    // ✅ For ZADD, Upstash returns a number: number of elements added (as float64)
+    //  For ZADD, Upstash returns a number: number of elements added (as float64)
     switch v := result.(type) {
     case float64, float32, int, int64, int32:
         log.Printf("ZADD added %v elements", v)

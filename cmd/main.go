@@ -14,7 +14,7 @@ import (
 
 func init() {
 	db.ConnectPostgresDB()
-	//db.AutoMigrateModels()
+	db.AutoMigrateModels()
 	db.InitRedis()
 }
 
