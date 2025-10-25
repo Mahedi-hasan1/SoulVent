@@ -18,7 +18,7 @@ func GetPostsByUsername(username string, limit int) ([]dto.UserPostResponse, err
 	var posts []dto.UserPostResponse
 
 	err := db.PgDb.Model(&model.Post{}).
-		Select("posts.id", "user_id", "content", "image_urls", "reaction_count", "comment_count", "posts.created_at", "posts.updated_at").
+		Select("posts.id", "user_id", "content", "image_urls", "like_count", "dislike_count", "comment_count", "posts.created_at", "posts.updated_at").
 		Joins("JOIN users ON posts.user_id = users.id").
 		Where("users.username = ?", username).
 		Order("posts.created_at DESC").

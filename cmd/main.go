@@ -14,7 +14,7 @@ import (
 
 func init() {
 	db.ConnectPostgresDB()
-	db.AutoMigrateModels()
+	//db.AutoMigrateModels()
 	db.InitRedis()
 }
 
@@ -59,6 +59,10 @@ func main() {
 		protected.POST("/searches", handler.AddSearchHistroy)
 		protected.GET("/searches", handler.GetSearchResult)
 		protected.GET("search-history", handler.GetSearchHistory)
+
+		//reaction routes
+		protected.POST("/reactions",handler.AddReaction)
+		protected.DELETE("/reactions", handler.RemoveReaction)
 	}
 
 	port := os.Getenv("PORT")

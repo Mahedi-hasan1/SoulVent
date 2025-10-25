@@ -10,12 +10,13 @@ type CreatePostRequest struct {
 }
 
 type UserPostResponse struct {
-	ID            string    `json:"id"`
-	UserID        string    `json:"user_id"`
-	Content       string    `json:"content"`
-	ImageURLs     []string  `json:"image_urls" gorm:"serializer:json;type:json"`
-	ReactionCount int       `json:"reaction_count"`
-	CommentCount  int       `json:"comment_count"`
-	CreatedAt     time.Time `json:"created_at"`
-	UpdatedAt     time.Time `json:"updated_at"`
+	ID           string    `json:"id"`
+	UserID       string    `json:"user_id"`
+	Content      string    `json:"content"`
+	ImageURLs    []string  `json:"image_urls" gorm:"serializer:json;type:json"`
+	LikeCount    int       `json:"like_count"`
+	DislikeCount int       `json:"dislike_count"`
+	CommentCount int       `json:"comment_count"`
+	CreatedAt    time.Time `json:"created_at"`
+	UpdatedAt    time.Time `json:"updated_at"`
 }
